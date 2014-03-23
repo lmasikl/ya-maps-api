@@ -3,7 +3,21 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewposrt" content="width=device-width, initial-scale=1.0">
+    <script src="http://api-maps.yandex.ru/2.0-stable/?load=package.standard&lang=ru-RU" type="text/javascript"></script>
+    <script type="text/javascript">
+        var myMap;
+
+        function init(){     
+            myMap = new ymaps.Map ("map", {
+                center: [55.76, 37.64],
+                zoom: 11
+            });
+        }
+
+        ymaps.ready(init);
+    </script>
 </head>
 <body>
+    <div id="map" style="width: 600px; height: 400px"></div>
 </body>
 </html>
