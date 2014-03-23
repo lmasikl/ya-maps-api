@@ -1,1 +1,42 @@
-My GitHub Page
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewposrt" content="width=device-width, initial-scale=1.0">
+    <script src="http://api-maps.yandex.ru/2.0-stable/?load=package.full&lang=ru-RU" type="text/javascript"></script>
+    <script type="text/javascript">
+        ymaps.ready(function(){
+            // Create map
+            var map = new ymaps.Map ("map", {
+                center: [55.76, 37.64],
+                zoom: 11
+            });
+            // Create rectangle
+            var rect = new ymaps.Rectangle([
+                [55.70, 37.50],
+                [55.80, 37.75]
+            ], {}, {
+                fill: false,
+                strokeColor: "fa0",
+                strokeWidth: 4
+            });
+            // Create triangle
+            var triangle = new ymaps.Polygon([
+                 [[55.80, 37.50],[55.85, 37.63],[55.80, 37.75]]
+            ], {}, {
+                fill: false,
+                strokeColor: "f00",
+                strokeWidth: 4
+            });
+            
+            // Add rectangle on map
+            map.geoObjects.add(rect);
+            // Add triangle on map
+            map.geoObjects.add(triangle);
+        });
+    </script>
+</head>
+<body>
+    <div id="map" style="width: 800px; height: 600px"></div>
+</body>
+</html>
