@@ -17,9 +17,14 @@
                 [55.80, 37.75]
             ]);
             // Create triangle
+            var triangle = new ymaps.Polygon([
+                 [[55.80, 37.50],[55.85, 37.63],[55.80, 37.75]]
+            ]);
             
             // Add rectangle on map
             map.geoObjects.add(rect);
+            // Add triangle on map
+            map.geoObjects.add(triangle);
         });
     </script>
 </head>
