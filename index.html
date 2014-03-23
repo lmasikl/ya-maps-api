@@ -8,11 +8,39 @@
         function init() {
             var mapOptions = {
                 center: new google.maps.LatLng(55.74, 37.64),
-                zoom: 10,
+                zoom: 11,
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             };
+
             var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+            var rectangle = new google.maps.Rectangle({
+                strokeColor: '#FFAA00',
+                strokeWeight: 3,
+                fillColor: '#000000',
+                fillOpacity: 0,
+                map: map,
+                bounds: new google.maps.LatLngBounds(
+                    new google.maps.LatLng(55.69, 37.52),
+                    new google.maps.LatLng(55.80, 37.72))
+            });
+
+            var triangle = new google.maps.Polyline({
+                path: [
+                    new google.maps.LatLng(55.80, 37.52),
+                    new google.maps.LatLng(55.80, 37.72),
+                    new google.maps.LatLng(55.85, 37.62),
+                    new google.maps.LatLng(55.80, 37.52)
+                ],
+                geodesic: true,
+                strokeColor: '#FF0000',
+                strokeOpacity: 1.0,
+                strokeWeight: 3,
+                map: map
+            });   
+
         }
+        google.maps.event.addDomListener(window, 'load', init);
     </script>
 </head>
 <body onload="init()">
