@@ -3,21 +3,27 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewposrt" content="width=device-width, initial-scale=1.0">
-    <script src="http://api-maps.yandex.ru/2.0-stable/?load=package.standard&lang=ru-RU" type="text/javascript"></script>
+    <script src="http://api-maps.yandex.ru/2.0-stable/?load=package.full&lang=ru-RU" type="text/javascript"></script>
     <script type="text/javascript">
-        var myMap;
-
-        function init(){     
-            myMap = new ymaps.Map ("map", {
+        ymaps.ready(function(){
+            // Create map
+            var map = new ymaps.Map ("map", {
                 center: [55.76, 37.64],
                 zoom: 11
             });
-        }
-
-        ymaps.ready(init);
+            // Create rectangle
+            var rect = new ymaps.Rectangle([
+                [55.70, 37.50],
+                [55.80, 37.75]
+            ]);
+            // Create triangle
+            
+            // Add rectangle on map
+            map.geoObjects.add(rect);
+        });
     </script>
 </head>
 <body>
-    <div id="map" style="width: 600px; height: 400px"></div>
+    <div id="map" style="width: 800px; height: 600px"></div>
 </body>
 </html>
