@@ -1,48 +1,71 @@
 ymaps.ready(function(){
-    var coords;
-    var map;
-    // Create map
-
-    var geoCode = ymaps.geocode('Москва').then(function(res){
-        // var obj = res.geoObjects.get(0);
-        coords = res.geoObjects.get(0).geometry.getCoordinates();
-        map = new ymaps.Map ("map", {
-            center: coords,
-            zoom: 11,
-            behaviors: ['default', 'scrollZoom']
+    var createMap = function() {
+        ymaps.geocode('Москва').then(function(result){
+            var coordinates = result.geoObjects.get(0).geometry.getCoordinates();
+            var map = new ymaps.Map ("map", {
+                center: coordinates,
+                zoom: 11,
+                behaviors: ['default', 'scrollZoom'],
+                adjustZoomOnTypeChange: true
+            });
+            createHouse(map);
         });
-    });
+    };
 
-    // .then(function (res) {
-    //     var firstGeoObject = res.geoObjects.get(0),
-    //         bounds = firstGeoObject.properties.get('boundedBy');
-    //     coords = firstGeoObject.geometry.getCoordinates(),
+    var createHouse = function(map) {
+        // Params direction 0 - longtitude, 1 - latitude. Default 0.
+        var getHalfSize = function(direction){
+            // Check is direction correct
+            if (direction != 0 && direction != 1) {
+                direction = 0;
+            }
+            // Get size
+            var size = (mapSize[1][direction] - mapSize[0][direction]) / 4;
+            // Check is positive value
+            if (size < 0) {
+                size = -1 * size;
+            }
+            return size;
+        }
 
-    //     map.setBounds(bounds, {
-    //         checkZoomRange: true
-    //     });
-    // });
+        var mapSize = map.getBounds();
+        var mapCenter = map.getCenter();
 
-    // Create rectangle
-    // var rect = new ymaps.Rectangle([
-    //     [55.70, 37.50],
-    //     [55.80, 37.75]
-    // ], {}, {
-    //     fill: false,
-    //     strokeColor: "fa0",
-    //     strokeWidth: 4
-    // });
-    // // Create triangle
-    // var triangle = new ymaps.Polygon([
-    //      [[55.80, 37.50],[55.85, 37.63],[55.80, 37.75]]
-    // ], {}, {
-    //     fill: false,
-    //     strokeColor: "f00",
-    //     strokeWidth: 4
-    // });
-    
-    // // Add rectangle on map
-    // map.geoObjects.add(rect);
-    // // Add triangle on map
-    // map.geoObjects.add(triangle);
+        var size = getHalfSize(0);
+        var _size = getHalfSize(0);
+        // Choice min from two sizes
+        if (size > _size) {
+            size = _size;
+        }
+
+        createRectangle(map, size, mapCenter);
+        createTriangle(map, size, mapCenter);
+    }
+
+    var createRectangle = function(map, size, center) {
+        rect = new ymaps.Rectangle([
+            [center[0] - size / 2, center[1] - size], 
+            [center[0] + size / 2, center[1] + size]
+        ], {}, {
+            fill: false,
+            strokeColor: "f90",
+            strokeWidth: 4
+        });
+        map.geoObjects.add(rect);
+    };
+
+    var createTriangle = function(map, size, center) {
+        var triangle = new ymaps.Polygon([[
+            [center[0] + size / 2, center[1] - size],
+            [center[0] + size, center[1]],
+            [center[0] + size / 2, center[1] + size]
+        ]], {}, {
+            fill: false,
+            strokeColor: "f00",
+            strokeWidth: 4
+        });
+        map.geoObjects.add(triangle);
+    };
+
+    createMap();
 });
