@@ -51,7 +51,7 @@ var HouseCreator = {
         var center = HouseCreator.map.getCenter();
 
         var rect = new ymaps.Rectangle([
-            [center[0] - segmentLength / 2, center[1] - segmentLength], 
+            [10 + center[0] - segmentLength / 2, center[1] - segmentLength], 
             [center[0] + segmentLength / 2, center[1] + segmentLength]
         ], {}, {
             fill: false,
