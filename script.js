@@ -1,71 +1,78 @@
-ymaps.ready(function(){
-    var createMap = function() {
+var HouseCreator = {
+    map: null,
+    getSegmentLength: function() {
+        /**
+        * @brief Calculate segment length from map size
+        * @param direction {Number}
+        *       0 - logtitude (default)
+        *       1 - latitude
+        */
+        var getLength = function(direction){
+            // Check is direction correct
+            if (direction != 0 && direction != 1) {
+                direction = 0;
+            }
+            var mapSize = HouseCreator.map.getBounds();
+            var length = (mapSize[1][direction] - mapSize[0][direction]) / 4;
+            if (length < 0) {
+                length = -1 * length;
+            }
+            return length;
+        };
+
+        var segment = getLength(0);
+        var _segment = getLength(1);
+        // Choice min from two sizes
+        if (segment > _segment) {
+            segment = _segment;
+        }
+
+        return segment;
+    },
+    createMap: function(callback) {
         ymaps.geocode('Москва').then(function(result){
             var coordinates = result.geoObjects.get(0).geometry.getCoordinates();
-            var map = new ymaps.Map ("map", {
+            HouseCreator.map = new ymaps.Map ("map", {
                 center: coordinates,
                 zoom: 11,
                 behaviors: ['default', 'scrollZoom'],
                 adjustZoomOnTypeChange: true
             });
-            createHouse(map);
+
+            callback();
         });
-    };
+    },
+    createHouse: function() {
+        HouseCreator.createRectangle();
+        HouseCreator.createTriangle();
+    },
+    createRectangle: function() {
+        var segmentLength = HouseCreator.getSegmentLength();
+        var center = HouseCreator.map.getCenter();
 
-    var createHouse = function(map) {
-        // Params direction 0 - longtitude, 1 - latitude. Default 0.
-        var getHalfSize = function(direction){
-            // Check is direction correct
-            if (direction != 0 && direction != 1) {
-                direction = 0;
-            }
-            // Get size
-            var size = (mapSize[1][direction] - mapSize[0][direction]) / 4;
-            // Check is positive value
-            if (size < 0) {
-                size = -1 * size;
-            }
-            return size;
-        }
-
-        var mapSize = map.getBounds();
-        var mapCenter = map.getCenter();
-
-        var size = getHalfSize(0);
-        var _size = getHalfSize(0);
-        // Choice min from two sizes
-        if (size > _size) {
-            size = _size;
-        }
-
-        createRectangle(map, size, mapCenter);
-        createTriangle(map, size, mapCenter);
-    }
-
-    var createRectangle = function(map, size, center) {
-        rect = new ymaps.Rectangle([
-            [center[0] - size / 2, center[1] - size], 
-            [center[0] + size / 2, center[1] + size]
+        var rect = new ymaps.Rectangle([
+            [center[0] - segmentLength / 2, center[1] - segmentLength], 
+            [center[0] + segmentLength / 2, center[1] + segmentLength]
         ], {}, {
             fill: false,
             strokeColor: "f90",
             strokeWidth: 4
         });
-        map.geoObjects.add(rect);
-    };
+        HouseCreator.map.geoObjects.add(rect);
+    },
+    createTriangle: function() {
+        var segmentLength = HouseCreator.getSegmentLength();
+        var center = HouseCreator.map.getCenter();;
 
-    var createTriangle = function(map, size, center) {
         var triangle = new ymaps.Polygon([[
-            [center[0] + size / 2, center[1] - size],
-            [center[0] + size, center[1]],
-            [center[0] + size / 2, center[1] + size]
+            [center[0] + segmentLength / 2, center[1] - segmentLength],
+            [center[0] + segmentLength, center[1]],
+            [center[0] + segmentLength / 2, center[1] + segmentLength]
         ]], {}, {
             fill: false,
             strokeColor: "f00",
             strokeWidth: 4
         });
-        map.geoObjects.add(triangle);
-    };
-
-    createMap();
-});
+        HouseCreator.map.geoObjects.add(triangle);
+    }
+};
